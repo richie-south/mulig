@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/richie-south/mulig/issues"
   },
-  "homepage": "https://github.com/richie-south/mulig#readme"
+  "homepage": "https://github.com/richie-south/mulig#readme",
+  "devDependencies": {
+    "eslint": "^3.16.1"
+  }
 }
