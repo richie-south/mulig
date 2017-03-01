@@ -1,0 +1,24 @@
+{
+  "name": "mulig",
+  "version": "1.0.0",
+  "description": "mulig",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richie-south/mulig.git"
+  },
+  "keywords": [
+    "promise",
+    "all",
+    "first"
+  ],
+  "author": "richard söderman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/richie-south/mulig/issues"
+  },
+  "homepage": "https://github.com/richie-south/mulig#readme"
+}
