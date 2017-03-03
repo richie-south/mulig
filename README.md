@@ -1,11 +1,11 @@
-# mulig
+# Resolve multible promises with some order: fastest, queue
 A promise thing [![npm version](https://badge.fury.io/js/mulig.svg)](https://badge.fury.io/js/mulig)
 
 `npm install mulig --save`
 
 ## Methods
 - mulig
-- inOrder
+- queue
 
 
 ## Mulig by examples
@@ -45,7 +45,7 @@ mulig(promises,
   // value: value of resolved promise
   // index: index of given array promise is in
   (value, index) => { 
-    console.log('promise resolve in order of completion') 
+    console.log('promise resolve in order of completion', value) 
   },
   // called on error
   (error) => { 
@@ -58,9 +58,9 @@ Promise.all(promises)
 
 ```
 
-**inOrder**
+**queue**
 
-`mulig.inOrder()`
+`mulig.queue()`
 ```javascript
 
 const mulig = requre('mulig')
@@ -90,12 +90,12 @@ const promises = [
  * @param  {Function} [error function, this runs when a promise throws an error]
  * @return {Array}    [returns given array]
  */
-mulig.inOrder(promises,
+mulig.queue(promises,
   // called on each promise success
   // value: value of resolved promise
   // index: index of given array promise is in. Unnecessary when using inOrder
   (value, index) => { 
-    console.log('promise resolve in order of completion') 
+    console.log('promise resolve in order of completion', value) 
   },
   // called on error
   (error) => { 
@@ -107,6 +107,3 @@ Promise.all(promises)
   .catch() 
 
 ```
-
-## TODO
-- Tests
