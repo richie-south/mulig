@@ -88,3 +88,31 @@ describe('mulig: queue', () => {
     .catch(() => {})
   }) 
 })
+
+describe('mulig: stack', () => {
+
+  it('promises should resolve in reverse order', (done) => {
+    const promises = [
+      getPromise(0, 25),
+      getPromise(1, 10),
+      getPromise(2, 20),
+      getPromise(3, 5),
+    ]
+    const order = []
+    const orderExpect = [3, 2, 1, 0]
+
+    Promise.all(
+      mulig.stack(promises, 
+        (value, index) => {
+          order.push(value)
+        },
+        () => {}
+      )
+    )
+    .then(() => 
+      check(done, () =>
+      expect(order).to.deep.equal(orderExpect)
+    ))
+    .catch(() => {})
+  }) 
+})
