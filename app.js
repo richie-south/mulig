@@ -58,4 +58,8 @@ const inOrder = (promises, fn = () => {}, errorFn = () => {}) => {
 }
 
 module.exports = mulig
-module.exports.inOrder = inOrder
+module.exports.queue = queue
+module.exports.inOrder = (...args) => {
+  console.log('.inOrder() is deprecated! Use .queue() instead!')
+  return queue(...args)
+}
