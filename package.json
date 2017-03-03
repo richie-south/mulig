@@ -1,7 +1,7 @@
 {
   "name": "mulig",
-  "version": "1.2.1",
-  "description": "mulig",
+  "version": "1.2.2",
+  "description": "Resolve multible promises with some order: fastest, queue",
   "main": "app.js",
   "scripts": {
     "test": "mocha test.js"
@@ -13,7 +13,9 @@
   "keywords": [
     "promise",
     "all",
-    "first"
+    "first",
+    "fastest",
+    "queue"
   ],
   "author": "richard söderman",
   "license": "ISC",
