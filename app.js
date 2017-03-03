@@ -27,26 +27,27 @@ const mulig = (promises, fn = () => {}, errorFn = () => {}) =>
  * runs fn in order of given array: as fast as posible
  * PARAMS CHECK: promiseMapFn
  */
-const inOrder = (promises, fn = () => {}, errorFn = () => {}) => {
+const queue = (promises, fn = () => {}, errorFn = () => {}) => {
   
   const queue = []
-  let queueToRun = []
   
   const runQueue = () => {
     const queueIterator = queue[Symbol.iterator]()
     
-    for(let item of queueIterator){
-      
-      if(!item){
-        break
-      }else if(!item.hasRun){
-        queue[item.index].hasRun = true
-        queueToRun.push(item)  
+    const queueToRun = ((queueItr) => {
+      const _queue = []
+      for(let item of queueItr){
+        if(!item){
+          return _queue
+        }else if(!item.hasRun){
+          queue[item.index].hasRun = true
+          _queue.push(item)  
+        }
       }
-    }
+      return _queue
+    })(queueIterator)
     
     queueToRun.forEach(({value, index}) => fn(value, index))
-    queueToRun = []
   }
   
   const addToQueue = (value, index) => {
