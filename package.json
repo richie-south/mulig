@@ -1,10 +1,10 @@
 {
   "name": "mulig",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "description": "mulig",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,10 @@
   },
   "homepage": "https://github.com/richie-south/mulig#readme",
   "devDependencies": {
-    "eslint": "^3.16.1"
-  }
+    "chai": "^3.5.0",
+    "check-chai": "0.0.1",
+    "eslint": "^3.16.1",
+    "mocha": "^3.2.0"
+  },
+  "dependencies": {}
 }
