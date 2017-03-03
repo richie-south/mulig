@@ -1,4 +1,4 @@
-# Resolve multible promises with some order: fastest, queue
+# Resolve multible promises with some order: fastest, queue, stack
 A promise thing [![npm version](https://badge.fury.io/js/mulig.svg)](https://badge.fury.io/js/mulig)
 
 `npm install mulig --save`
@@ -6,11 +6,24 @@ A promise thing [![npm version](https://badge.fury.io/js/mulig.svg)](https://bad
 ## Methods
 - mulig
 - queue
+- stack
 
 
 ## Mulig by examples
 
 `mulig()`
+
+simple example
+```javascript
+const mulig = requre('mulig')
+
+mulig(
+  /*Promise array*/, 
+  (value, index) => {}, // success function
+  (error) => {} // fail function
+)
+```
+complex example
 ```javascript
 
 const mulig = requre('mulig')
@@ -40,17 +53,20 @@ const promises = [
  * @param  {Function} [error function, this runs when a promise throws an error]
  * @return {Array}    [returns given array]
  */
-mulig(promises,
+mulig(
+  // array of promises
+  promises,
   // called on each promise success
   // value: value of resolved promise
   // index: index of given array promise is in
   (value, index) => { 
     console.log('promise resolve in order of completion', value) 
   },
-  // called on error
+  // called on each error
   (error) => { 
     console.log('on promise error', error) 
-  })
+  }
+)
   
 Promise.all(promises)
   .then() // when all promises are done
@@ -61,6 +77,19 @@ Promise.all(promises)
 **queue**
 
 `mulig.queue()`
+
+simple example
+```javascript
+const mulig = requre('mulig')
+
+mulig.queue(
+  /*Promise array*/
+  (value, index) => {}, // success function
+  (error) => {} // error function
+)
+```
+
+complex example
 ```javascript
 
 const mulig = requre('mulig')
@@ -90,20 +119,39 @@ const promises = [
  * @param  {Function} [error function, this runs when a promise throws an error]
  * @return {Array}    [returns given array]
  */
-mulig.queue(promises,
+mulig.queue(
+  // array of promises
+  promises,
   // called on each promise success
   // value: value of resolved promise
-  // index: index of given array promise is in. Unnecessary when using inOrder
+  // index: index of given array promise is in. Unnecessary when using queue
   (value, index) => { 
-    console.log('promise resolve in order of completion', value) 
+    console.log('promise resolve in order of promise array', value) 
   },
-  // called on error
+  // called on each error
   (error) => { 
     console.log('on promise error', error) 
-  })
+  }
+)
   
 Promise.all(promises)
   .then() // when all promises are done
   .catch() 
 
+```
+
+**stack**  
+same as mulig.queue() but resolve in order of reversed promise array
+
+`mulig.stack()`
+
+example
+```javascript
+const mulig = requre('mulig')
+
+mulig.stack(
+  /*Promise array*/
+  (value, index) => {}, // success function
+  (error) => {} // error function
+)
 ```
