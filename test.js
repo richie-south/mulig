@@ -59,6 +59,23 @@ describe('mulig: mulig', () => {
           expect(true).to.equal((error instanceof Error)))
       })
   })
+
+
+  it('error function returns index', (done) => {
+    const promises = [
+      getPromise(1, 20), 
+      getPromise(1, 10, true),
+    ]
+
+    const expects = 1
+
+    mulig(promises, 
+      () => {},
+      (error, index) => {
+        check(done, () =>
+          expect(index).to.equal(expects))
+      })
+  })
 })
 
 
