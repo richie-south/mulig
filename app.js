@@ -12,7 +12,7 @@ const promiseMapFn = (promises, fn, errorFn) =>
   promises.map((item, index) => {
     item
       .then(value => fn(value, index))
-      .catch(errorFn)
+      .catch(error => errorFn(error, index))
     return item    
   })
 
