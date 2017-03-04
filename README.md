@@ -20,7 +20,7 @@ const mulig = requre('mulig')
 mulig(
   /*Promise array*/, 
   (value, index) => {}, // success function
-  (error) => {} // fail function
+  (error, index) => {} // fail function
 )
 ```
 complex example
@@ -63,7 +63,9 @@ mulig(
     console.log('promise resolve in order of completion', value) 
   },
   // called on each error
-  (error) => { 
+  // error: -
+  // index: index of promise in array
+  (error, index) => { 
     console.log('on promise error', error) 
   }
 )
@@ -129,7 +131,9 @@ mulig.queue(
     console.log('promise resolve in order of promise array', value) 
   },
   // called on each error
-  (error) => { 
+  // error: -
+  // index: index of promise in array
+  (error, index) => { 
     console.log('on promise error', error) 
   }
 )
@@ -152,6 +156,6 @@ const mulig = requre('mulig')
 mulig.stack(
   /*Promise array*/
   (value, index) => {}, // success function
-  (error) => {} // error function
+  (error, index) => {} // error function
 )
 ```
