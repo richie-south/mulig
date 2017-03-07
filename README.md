@@ -1,4 +1,4 @@
-# Resolve multible promises with some order: fastest, queue, stack
+# Resolve multible promises with order: fastest, queue, stack
 A promise thing [![npm version](https://badge.fury.io/js/mulig.svg)](https://badge.fury.io/js/mulig)
 
 `npm install mulig --save`
@@ -13,14 +13,21 @@ A promise thing [![npm version](https://badge.fury.io/js/mulig.svg)](https://bad
 
 `mulig()`
 
+mulig runs callback function as soon as promises resolve. You can return values from callback functions (success or error) and they will be passed with the prev param the next time callback is invoked.
+
 simple example
 ```javascript
 const mulig = requre('mulig')
 
 mulig(
-  /*Promise array*/, 
-  (value, index) => {}, // success function
-  (error, index) => {} // fail function
+  [], // array of Promises
+  (
+    value,  // any: value of resolved promise
+    index,  // Number: index of resolved promise
+    isDone, // Boolean: is last promise to resolve
+    prev    // any: returned value from last time this or error function run
+  ) => {}, // success function
+  (error, index, isDone, prev) => {} // fail function
 )
 ```
 complex example
@@ -58,14 +65,12 @@ mulig(
   promises,
   // called on each promise success
   // value: value of resolved promise
-  // index: index of given array promise is in
-  (value, index) => { 
-    console.log('promise resolve in order of completion', value) 
+  (value) => { 
+    console.log('order of completion', value) 
   },
   // called on each error
-  // error: -
-  // index: index of promise in array
-  (error, index) => { 
+  // error: error from promise
+  (error) => { 
     console.log('on promise error', error) 
   }
 )
@@ -78,16 +83,23 @@ Promise.all(promises)
 
 **queue**
 
-`mulig.queue()`
+`mulig.queue()`  
 
-simple example
+Mulig.queue resolves all promises in order of given array. Even if a promise at index 2 (in array) resolves before promise at index 0 it wont call the success or error callback before promise at index 0 and 1 resolves.
+
+simple example  
 ```javascript
 const mulig = requre('mulig')
 
 mulig.queue(
-  /*Promise array*/
-  (value, index) => {}, // success function
-  (error) => {} // error function
+  [], // array of Promises
+  (
+    value,  // any: value of resolved promise
+    index,  // Number: index of resolved promise
+    isDone, // Boolean: is last promise to resolve
+    prev    // any: returned value from last time this or error function run
+  ) => {}, // success function
+  (error, index, isDone, prev) => {} // error function
 )
 ```
 
@@ -126,14 +138,12 @@ mulig.queue(
   promises,
   // called on each promise success
   // value: value of resolved promise
-  // index: index of given array promise is in. Unnecessary when using queue
-  (value, index) => { 
-    console.log('promise resolve in order of promise array', value) 
+  (value) => { 
+    console.log('order of promise array', value) 
   },
   // called on each error
-  // error: -
-  // index: index of promise in array
-  (error, index) => { 
+  // error: error from promise
+  (error) => { 
     console.log('on promise error', error) 
   }
 )
