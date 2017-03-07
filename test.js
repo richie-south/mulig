@@ -175,6 +175,30 @@ describe('mulig: queue', () => {
     ))
     .catch(() => {})
   }) 
+
+  it('isDone is called when all promises have resolved', (done) => {
+    const promises = [
+      getPromise(1, 20), 
+      getPromise(1, 10),
+      getPromise(1, 5),
+    ]
+
+    const expects = []
+
+    mulig.queue(promises, 
+      (value, index, isDone, prev = 0) => {
+
+        expects.push(value)
+        if(isDone){
+          check(done, () =>
+            expect([1, 1, 1]).to.deep.equal(expects))
+        }
+
+        return value + prev
+      },
+      () => {})
+  })
+
 })
 
 describe('mulig: stack', () => {
