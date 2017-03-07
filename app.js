@@ -40,8 +40,11 @@ const addIsDoneAndReturnedValue = (totalLength, successFn, errorFn) => {
  * runs fn on order of fastest to resolve
  * PARAMS CHECK: promiseMapFn 
  */
-const mulig = (promises, fn = () => {}, errorFn = () => {}) => 
-    promiseMapFn(promises, fn, errorFn)
+const mulig = (promises, successFn = () => {}, errorFn = () => {}) => {
+  const totalLength = promises.length
+  const [_successFn, _errorFn] = addIsDoneAndReturnedValue(totalLength, successFn, errorFn)
+  return promiseMapFn(promises, _successFn, _errorFn)
+}
 
 /**
  * first in array: first to call fn
@@ -51,7 +54,8 @@ const mulig = (promises, fn = () => {}, errorFn = () => {}) =>
 const queue = (promises, successFn = () => {}, errorFn = () => {}) => {
   
   const queue = []
-  
+  const [_successFn, _errorFn] = addIsDoneAndReturnedValue(promises.length, successFn, errorFn)
+
   /**
    * Runs queue in order of promises array
    */
@@ -76,21 +80,23 @@ const queue = (promises, successFn = () => {}, errorFn = () => {}) => {
       return _queue
     })(queueIterator)
     
-    queueToRun.forEach(({value, index}) => fn(value, index))
+    queueToRun.forEach(({value, index, fn}) => fn(value, index))
   }
   
   /**
-   * adds value, index to queue
+   * adds value, index and fn object to queue
    * runs runQueue
+   * @param {fn} [fn to pass in queue object]
+   * @returns [Function] [function to take the rest params]
    * @param {any} value 
    * @param {Number} index 
    */
-  const addToQueue = (value, index) => {
-    queue[index] = { value, index, hasRun: false }
+  const addToQueue = (fn) => (value, index) => {
+    queue[index] = { value, index, hasRun: false, fn }
     runQueue()
   }
   
-  return promiseMapFn(promises, addToQueue, errorFn)
+  return promiseMapFn(promises, addToQueue(_successFn), addToQueue(_errorFn))
 }
 
 /**
