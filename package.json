@@ -15,7 +15,8 @@
     "all",
     "first",
     "fastest",
-    "queue"
+    "queue",
+    "pass values"
   ],
   "author": "richard söderman",
   "license": "ISC",
