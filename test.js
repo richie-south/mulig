@@ -222,6 +222,28 @@ describe('mulig: queue', () => {
     ))
     .catch(() => {})
   })
+
+  it('success fn should be able to pass value to next success fn', (done) => {
+    const promises = [
+      getPromise(1, 20), 
+      getPromise(1, 10),
+      getPromise(1, 5),
+    ]
+
+    const expects = 3
+
+    mulig.queue(promises, 
+      (value, index, isDone, prev = 0) => {
+        if(isDone){
+          check(done, () =>
+            expect(value + prev).to.equal(expects))
+        }
+
+        return value + prev
+      },
+      () => {})
+  })
+
 })
 
 describe('mulig: stack', () => {
