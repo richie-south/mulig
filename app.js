@@ -1,6 +1,5 @@
 'use strict'
 
-
 /**
  * runs fn on order of fastest to resolve
  * @param  {Array}    promises [array of promise]
@@ -15,6 +14,27 @@ const promiseMapFn = (promises, fn, errorFn) =>
       .catch(error => errorFn(error, index))
     return item    
   })
+
+/**
+ * Adds abillity to pass return values between function calls 
+ * Adds abillity to check if last callback
+ * @param {Number} totalLength 
+ * @param {Function} successFn 
+ * @param {Function} errorFn 
+ * @returns [Array] [array of Functions]
+ */
+const addIsDoneAndReturnedValue = (totalLength, successFn, errorFn) => {
+  let nrOfRuns = 0
+  let returnedValue
+
+  const _run = (fn) => (value, index) => {
+    nrOfRuns++
+    const isEqualLength = nrOfRuns === totalLength
+    returnedValue = fn(value, index, isEqualLength, returnedValue)
+  }
+
+  return [_run(successFn), _run(errorFn)]
+}
 
 /**
  * runs fn on order of fastest to resolve
