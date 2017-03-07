@@ -7,10 +7,10 @@
  * @param  {Function} errorFn  [error function, this runs when a promise throws an error]
  * @return {Array}             [returns given array]
  */
-const promiseMapFn = (promises, fn, errorFn) => 
+const promiseMapFn = (promises, successFn, errorFn) => 
   promises.map((item, index) => {
     item
-      .then(value => fn(value, index))
+      .then(value => successFn(value, index))
       .catch(error => errorFn(error, index))
     return item    
   })
@@ -48,7 +48,7 @@ const mulig = (promises, fn = () => {}, errorFn = () => {}) =>
  * runs fn in order of given array: as fast as posible
  * PARAMS CHECK: promiseMapFn
  */
-const queue = (promises, fn = () => {}, errorFn = () => {}) => {
+const queue = (promises, successFn = () => {}, errorFn = () => {}) => {
   
   const queue = []
   
@@ -65,7 +65,7 @@ const queue = (promises, fn = () => {}, errorFn = () => {}) => {
      */
     const queueToRun = ((queueItr) => {
       const _queue = []
-      for(let item of queueItr){
+      for(const item of queueItr){
         if(!item){
           return _queue
         }else if(!item.hasRun){
@@ -98,8 +98,8 @@ const queue = (promises, fn = () => {}, errorFn = () => {}) => {
  * last in array: first to call fn
  * @return [Array of promises in same order as given]
  */
-const stack = (promises, fn = () => {}, errorFn = () => {}) => 
-  queue(promises.reverse(), fn, errorFn).reverse()
+const stack = (promises, successFn = () => {}, errorFn = () => {}) => 
+  queue(promises.reverse(), successFn, errorFn).reverse()
 
 module.exports = mulig
 module.exports.queue = queue
