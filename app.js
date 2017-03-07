@@ -110,9 +110,3 @@ const stack = (promises, successFn = () => {}, errorFn = () => {}) =>
 module.exports = mulig
 module.exports.queue = queue
 module.exports.stack = stack
-
-// deprecated
-module.exports.inOrder = (...args) => {
-  console.log('.inOrder() is deprecated! Use .queue() instead!')
-  return queue(...args)
-}
