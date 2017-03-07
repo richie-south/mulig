@@ -199,6 +199,29 @@ describe('mulig: queue', () => {
       () => {})
   })
 
+  it('value should be promise resolved value', (done) => {
+    const promises = [
+      getPromise(1, 10), 
+      getPromise(4, 20),
+      getPromise(7, 5),
+    ]
+    const order = []
+    const orderExpect = [1, 4, 7]
+
+    Promise.all(
+      mulig.queue(promises, 
+        (value) => {
+          order.push(value)
+        },
+        () => {}
+      )
+    )
+    .then(() => 
+      check(done, () =>
+        expect(order).to.deep.equal(orderExpect)
+    ))
+    .catch(() => {})
+  })
 })
 
 describe('mulig: stack', () => {
