@@ -76,6 +76,27 @@ describe('mulig: mulig', () => {
           expect(index).to.equal(expects))
       })
   })
+
+  it('isDone is called when all promises have resolved', (done) => {
+    const promises = [
+      getPromise(1, 20), 
+      getPromise(1, 10),
+      getPromise(1, 5),
+    ]
+
+    const expects = []
+
+    mulig(promises, 
+      (value, index, isDone) => {
+        expects.push(value)
+        if(isDone){
+          check(done, () =>
+            expect([1, 1, 1]).to.deep.equal(expects))
+        }
+      },
+      () => {})
+  })
+
 })
 
 
@@ -84,23 +105,29 @@ describe('mulig: queue', () => {
   it('promises should resolve in order', (done) => {
     const promises = [
       getPromise(1, 10), 
-      getPromise(1, 20),
-      getPromise(1, 5),
+      getPromise(2, 20),
+      getPromise(3, 5),
     ]
     const order = []
+    const values = []
     const orderExpect = [0, 1, 2]
+    const valuesExpect = [1, 2, 3]
 
     Promise.all(
       mulig.queue(promises, 
         (value, index) => {
           order.push(index)
+          values.push(value)
         },
         () => {}
       )
     )
     .then(() => 
-      check(done, () =>
+      check(done, () => {
         expect(order).to.deep.equal(orderExpect)
+        expect(values).to.deep.equal(valuesExpect)
+      }
+        
     ))
     .catch(() => {})
   }) 
@@ -131,5 +158,5 @@ describe('mulig: stack', () => {
       expect(order).to.deep.equal(orderExpect)
     ))
     .catch(() => {})
-  }) 
+  })
 })
