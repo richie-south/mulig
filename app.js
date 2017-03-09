@@ -61,26 +61,16 @@ const queue = (promises, successFn = () => {}, errorFn = () => {}) => {
    */
   const runQueue = () => {
     const queueIterator = queue[Symbol.iterator]()
-    
-    /**
-     * array of items from queue to run
-     * @param {Iterator} queueItr [iterator]
-     * @return [a array of newly resoved item]
-     */
-    const queueToRun = ((queueItr) => {
-      const _queue = []
-      for(const item of queueItr){
-        if(!item){
-          return _queue
-        }else if(!item.hasRun){
-          queue[item.index].hasRun = true
-          _queue.push(item)  
-        }
+
+    for(const item of queueIterator){
+      if(!item){
+        return
+      }else if(!item.hasRun){
+        queue[item.index].hasRun = true
+        const { fn, value, index } = item
+        fn(value, index)
       }
-      return _queue
-    })(queueIterator)
-    
-    queueToRun.forEach(({value, index, fn}) => fn(value, index))
+    }
   }
   
   /**
