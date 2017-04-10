@@ -46,10 +46,10 @@ const getPromise = (value, time) =>
 
 // Array of promises
 const promises = [
-  getPromise('1', 400), 
-  getPromise('2', 1600), 
-  getPromise('3', 1000), 
-  getPromise('4', 2200),
+  getPromise(1, 400), 
+  getPromise(2, 1600), 
+  getPromise(3, 1000), 
+  getPromise(4, 2200),
 ]
 
 /**
@@ -65,8 +65,13 @@ mulig(
   promises,
   // called on each promise success
   // value: value of resolved promise
-  (value) => { 
-    console.log('order of completion', value) 
+  (value, index, isDone, prev = 0) => { 
+    console.log(`order of completion: &{value}`) 
+    if(isDone){
+      console.log(`done: &{prev}`)
+    }
+
+    return value + prev
   },
   // called on each error
   // error: error from promise
@@ -119,10 +124,10 @@ const getPromise = (value, time) =>
 
 // Array of promises
 const promises = [
-  getPromise('1', 400), 
-  getPromise('2', 1600), 
-  getPromise('3', 1000), 
-  getPromise('4', 2200),
+  getPromise(1, 400), 
+  getPromise(2, 1600), 
+  getPromise(3, 1000), 
+  getPromise(4, 2200),
 ]
 
 /**
@@ -138,8 +143,13 @@ mulig.queue(
   promises,
   // called on each promise success
   // value: value of resolved promise
-  (value) => { 
-    console.log('order of promise array', value) 
+  (value, index, isDone, prev = 0) => { 
+    console.log(`order of promise array: &{value}`) 
+    if(isDone){
+      console.log(`done: &{prev}`)
+    }
+
+    return value + prev
   },
   // called on each error
   // error: error from promise
