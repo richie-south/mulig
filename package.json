@@ -1,6 +1,6 @@
 {
   "name": "mulig",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "Resolve multible promises with order: fastest, queue, stack",
   "main": "app.js",
   "scripts": {
