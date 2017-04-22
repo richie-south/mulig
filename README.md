@@ -1,42 +1,66 @@
-# Resolve multible promises with order: fastest, queue, stack
-A promise thing [![npm version](https://badge.fury.io/js/mulig.svg)](https://badge.fury.io/js/mulig)
 
-`npm install mulig --save`
+# Mulig
 
-## Methods
-- mulig
-- queue
-- stack
+[![npm version](https://badge.fury.io/js/mulig.svg)](https://badge.fury.io/js/mulig)    
+
+Resolves multible promises with order: fastest, queue and stack.
+
+# Installation
+
+```
+npm install mulig --save
+```
+
+# Usage
+
+## Summary
+
+* [mulig](#mulig)
+* [queue](#queue)
+* [stack](#stack)
 
 
-## Mulig by examples
+## mulig
 
-`mulig()`
+`mulig()`  
 
 mulig runs callback function as soon as promises resolve. You can return values from callback functions (success or error) and they will be passed with the prev param the next time callback is invoked.
 
-simple example
+**simple example**
 ```javascript
 const mulig = requre('mulig')
 
+/**
+ * resolves promises in order of completion
+ * @param  {Array}    [array of promise]
+ * @param  {Function} [resolve function: runs every time a promise resolves]
+ * @param  {Function} [error function: runs every time a promise throws an error]
+ * @return {Array}    [returns given array]
+ */
 mulig(
-  [], // array of Promises
+  [], /* array of Promises */
   (
-    value,  // any: value of resolved promise
-    index,  // Number: index of resolved promise
-    isDone, // Boolean: is last promise to resolve
-    prev    // any: returned value from last time this or error function run
-  ) => {}, // success function
-  (error, index, isDone, prev) => {} // fail function
+    value,  /* any: value of resolved promise */
+    index,  /* Number: index of resolved promise */
+    isDone, /* Boolean: is last promise to resolve */
+    prev    /* any: returned value from last time this or error function run */
+  ) => {}, /* success function */
+  (
+    error, /* Error message */
+    index, 
+    isDone, 
+    prev
+    ) => {} /* fail function: called on each error */
 )
 ```
-complex example
+
+**complex example**
 ```javascript
 
 const mulig = requre('mulig')
 
 // Only for explaining purpose
-// takes value and resolves that value of given time
+// takes value and resolves that value in a given time
 const getPromise = (value, time) =>
   new Promise((resolve) => {
     setTimeout(() => {
@@ -52,83 +76,34 @@ const promises = [
   getPromise(4, 2200),
 ]
 
-/**
- * resolves promises in order of completion
- * returns given promises 
- * @param  {Array}    [array of promise]
- * @param  {Function} [resolve function, this runs when a promise resolves]
- * @param  {Function} [error function, this runs when a promise throws an error]
- * @return {Array}    [returns given array]
- */
+
 mulig(
-  // array of promises
   promises,
-  // called on each promise success
-  // value: value of resolved promise
   (value, index, isDone, prev = 0) => { 
     console.log(`order of completion: &{value}`) 
+    
     if(isDone){
-      console.log(`done: &{prev}`)
+      console.log(`done: &{prev}`) // >>> 'done: 10'
     }
 
     return value + prev
   },
-  // called on each error
-  // error: error from promise
   (error) => { 
     console.log('on promise error', error) 
   }
 )
-  
-Promise.all(promises)
-  .then() // when all promises are done
-  .catch() 
-
 ```
 
-**queue**
+
+## queue
 
 `mulig.queue()`  
 
-Mulig.queue resolves all promises in order of given array. Even if a promise at index 2 (in array) resolves before promise at index 0 it wont call the success or error callback before promise at index 0 and 1 resolves.
+mulig.queue resolves all promises in order of given array. Even if a promise at index 2 (in array) resolves before promise at index 0 it wont call the success or error callback before promise at index 0 and 1 resolves.
 
-simple example  
+**simple example**
 ```javascript
 const mulig = requre('mulig')
-
-mulig.queue(
-  [], // array of Promises
-  (
-    value,  // any: value of resolved promise
-    index,  // Number: index of resolved promise
-    isDone, // Boolean: is last promise to resolve
-    prev    // any: returned value from last time this or error function run
-  ) => {}, // success function
-  (error, index, isDone, prev) => {} // error function
-)
-```
-
-complex example
-```javascript
-
-const mulig = requre('mulig')
-
-// Only for explaining purpose
-// takes value and resolves that value of given time
-const getPromise = (value, time) =>
-  new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(value)
-    }, time)
-  })
-
-// Array of promises
-const promises = [
-  getPromise(1, 400), 
-  getPromise(2, 1600), 
-  getPromise(3, 1000), 
-  getPromise(4, 2200),
-]
 
 /**
  * resolves promises in order of given array
@@ -139,43 +114,83 @@ const promises = [
  * @return {Array}    [returns given array]
  */
 mulig.queue(
-  // array of promises
+  [], /* array of Promises */
+  (
+    value,  /* any: value of resolved promise */
+    index,  /* Number: index of resolved promise */
+    isDone, /* Boolean: is last promise to resolve */
+    prev    /* any: returned value from last time this or error function run */
+  ) => {}, /* success function */
+  (
+    error, /* Error message */
+    index, 
+    isDone, 
+    prev
+    ) => {} /* fail function: called on each error */
+)
+```
+
+**complex example**
+```javascript
+
+const mulig = requre('mulig')
+
+// Only for explaining purpose
+// takes value and resolves that value of given time
+const getPromise = (value, time) =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(value)
+    }, time)
+  })
+
+// Array of promises
+const promises = [
+  getPromise(1, 400), 
+  getPromise(2, 1600), 
+  getPromise(3, 1000), 
+  getPromise(4, 2200),
+]
+
+mulig.queue(
   promises,
-  // called on each promise success
-  // value: value of resolved promise
   (value, index, isDone, prev = 0) => { 
     console.log(`order of promise array: &{value}`) 
     if(isDone){
-      console.log(`done: &{prev}`)
+      console.log(`done: &{prev}`) // >>> 'done: 10'
     }
 
     return value + prev
   },
-  // called on each error
-  // error: error from promise
   (error) => { 
     console.log('on promise error', error) 
   }
 )
-  
-Promise.all(promises)
-  .then() // when all promises are done
-  .catch() 
-
 ```
 
-**stack**  
-same as mulig.queue() but resolve in order of reversed promise array
+## stack
 
 `mulig.stack()`
 
-example
+same as mulig.queue() but resolve in order of reversed promise array
+
+**simple example**
 ```javascript
 const mulig = requre('mulig')
 
 mulig.stack(
-  /*Promise array*/
-  (value, index) => {}, // success function
-  (error, index) => {} // error function
+  [], /* array of Promises */
+  (
+    value,  /* any: value of resolved promise */
+    index,  /* Number: index of resolved promise */
+    isDone, /* Boolean: is last promise to resolve */
+    prev    /* any: returned value from last time this or error function run */
+  ) => {}, /* success function */
+  (
+    error, /* Error message */
+    index, 
+    isDone, 
+    prev
+    ) => {} /* fail function: called on each error */
 )
 ```
