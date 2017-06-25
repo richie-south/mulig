@@ -10,12 +10,12 @@ const gErrorFn = (value, index, isDone, prev) => prev
  * @param  {Function} errorFn  [error function, this runs when a promise throws an error]
  * @return {Array}             [returns given array]
  */
-const promiseMapFn = (promises, successFn, errorFn) => 
+const promiseMapFn = (promises, successFn, errorFn) =>
   promises.map((item, index) => {
     item
       .then(value => successFn(value, index))
       .catch(error => errorFn(error, index))
-    return item    
+    return item
   })
 
 /**
@@ -46,7 +46,7 @@ const addIsDoneAndReturnedValue = (totalLength, successFn, errorFn) => {
 const mulig = (promises, successFn = gSuccessFn, errorFn = gErrorFn) => {
   const totalLength = promises.length
   const [_successFn, _errorFn] = addIsDoneAndReturnedValue(totalLength, successFn, errorFn)
-  return promiseMapFn(promises, _successFn, _errorFn)
+  return promiseMapFn(promises, _successFn, _errorFn)      
 }
 
 /**
@@ -55,7 +55,7 @@ const mulig = (promises, successFn = gSuccessFn, errorFn = gErrorFn) => {
  * PARAMS CHECK: promiseMapFn
  */
 const queue = (promises, successFn = gSuccessFn, errorFn = gErrorFn) => {
-  
+
   const queue = []
   const [_successFn, _errorFn] = addIsDoneAndReturnedValue(promises.length, successFn, errorFn)
 
@@ -65,17 +65,17 @@ const queue = (promises, successFn = gSuccessFn, errorFn = gErrorFn) => {
   const runQueue = () => {
     const queueIterator = queue[Symbol.iterator]()
 
-    for(const item of queueIterator){
-      if(!item){
+    for (const item of queueIterator) {
+      if (!item) {
         return
-      }else if(!item.hasRun){
+      } else if (!item.hasRun) {
         const { fn, value, index } = item
         queue[index].hasRun = true
         fn(value, index)
       }
     }
   }
-  
+
   /**
    * adds value, index and fn object to queue
    * runs runQueue
@@ -89,7 +89,7 @@ const queue = (promises, successFn = gSuccessFn, errorFn = gErrorFn) => {
     queue[index] = { value, index, hasRun: false, fn }
     runQueue()
   }
-  
+
   return promiseMapFn(promises, addToQueue(_successFn), addToQueue(_errorFn))
 }
 
@@ -98,7 +98,7 @@ const queue = (promises, successFn = gSuccessFn, errorFn = gErrorFn) => {
  * last in array: first to call fn
  * @return [Array of promises in same order as given]
  */
-const stack = (promises, successFn = gSuccessFn, errorFn = gErrorFn) => 
+const stack = (promises, successFn = gSuccessFn, errorFn = gErrorFn) =>
   queue(promises.reverse(), successFn, errorFn).reverse()
 
 module.exports = mulig

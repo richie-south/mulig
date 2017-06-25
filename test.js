@@ -14,12 +14,12 @@ const mulig = require('./app')
 const getPromise = (value, time, doFail = false) =>
   new Promise((resolve, reject) => {
     setTimeout(() => {
-      if(doFail){
+      if (doFail) {
         return reject(new Error('failing'))
       }
       return resolve(value)
     }, time)
-    
+
   })
 
 describe('mulig: mulig', () => {
@@ -27,33 +27,33 @@ describe('mulig: mulig', () => {
   it('result function is called 4 times', (done) => {
     let result = 0
     const promises = [
-      getPromise(1, 5), 
-      getPromise(1, 20), 
-      getPromise(1, 10), 
+      getPromise(1, 5),
+      getPromise(1, 20),
+      getPromise(1, 10),
       getPromise(1, 30),
     ]
 
-    mulig(promises, 
+    mulig(promises,
       (value) => {
         result += value
 
-        if(result === 4){
-          check(done, () => 
+        if (result === 4) {
+          check(done, () =>
             expect(result).to.equal(4))
         }
       },
-      () => {}
+      () => { }
     )
   })
 
   it('error function is called once', (done) => {
     const promises = [
-      getPromise(1, 10), 
+      getPromise(1, 10),
       getPromise(1, 20, true),
     ]
 
-    mulig(promises, 
-      () => {},
+    mulig(promises,
+      () => { },
       (error) => {
         check(done, () =>
           expect(true).to.equal((error instanceof Error)))
@@ -63,14 +63,14 @@ describe('mulig: mulig', () => {
 
   it('error function returns index', (done) => {
     const promises = [
-      getPromise(1, 20), 
+      getPromise(1, 20),
       getPromise(1, 10, true),
     ]
 
     const expects = 1
 
-    mulig(promises, 
-      () => {},
+    mulig(promises,
+      () => { },
       (error, index) => {
         check(done, () =>
           expect(index).to.equal(expects))
@@ -79,48 +79,48 @@ describe('mulig: mulig', () => {
 
   it('isDone is called when all promises have resolved', (done) => {
     const promises = [
-      getPromise(1, 20), 
+      getPromise(1, 20),
       getPromise(1, 10),
       getPromise(1, 5),
     ]
 
     const expects = []
 
-    mulig(promises, 
+    mulig(promises,
       (value, index, isDone) => {
         expects.push(value)
-        if(isDone){
+        if (isDone) {
           check(done, () =>
             expect([1, 1, 1]).to.deep.equal(expects))
         }
       },
-      () => {})
+      () => { })
   })
 
   it('success fn should be able to pass value to next success fn', (done) => {
     const promises = [
-      getPromise(1, 20), 
+      getPromise(1, 20),
       getPromise(1, 10),
       getPromise(1, 5),
     ]
 
     const expects = 3
 
-    mulig(promises, 
+    mulig(promises,
       (value, index, isDone, prev = 0) => {
-        if(isDone){
+        if (isDone) {
           check(done, () =>
             expect(value + prev).to.equal(expects))
         }
 
         return value + prev
       },
-      () => {})
+      () => { })
   })
 
   it('error and success fn:s should be able to pass value to next success error/success fn', (done) => {
     const promises = [
-      getPromise(1, 20), 
+      getPromise(1, 20),
       getPromise(1, 10, true),
       getPromise(1, 5, true),
       getPromise(1, 15),
@@ -128,9 +128,9 @@ describe('mulig: mulig', () => {
 
     const expects = 2
 
-    mulig(promises, 
+    mulig(promises,
       (value, index, isDone, prev = 0) => {
-        if(isDone){
+        if (isDone) {
           check(done, () =>
             expect(value + prev).to.equal(expects))
         }
@@ -148,7 +148,7 @@ describe('mulig: queue', () => {
 
   it('promises should resolve in order', (done) => {
     const promises = [
-      getPromise(1, 10), 
+      getPromise(1, 10),
       getPromise(2, 20),
       getPromise(3, 5),
     ]
@@ -158,50 +158,50 @@ describe('mulig: queue', () => {
     const valuesExpect = [1, 2, 3]
 
     Promise.all(
-      mulig.queue(promises, 
+      mulig.queue(promises,
         (value, index) => {
           order.push(index)
           values.push(value)
         },
-        () => {}
+        () => { }
       )
     )
-    .then(() => 
-      check(done, () => {
-        expect(order).to.deep.equal(orderExpect)
-        expect(values).to.deep.equal(valuesExpect)
-      }
-        
-    ))
-    .catch(() => {})
-  }) 
+      .then(() =>
+        check(done, () => {
+          expect(order).to.deep.equal(orderExpect)
+          expect(values).to.deep.equal(valuesExpect)
+        }
+
+        ))
+      .catch(() => { })
+  })
 
   it('isDone is called when all promises have resolved', (done) => {
     const promises = [
-      getPromise(1, 20), 
+      getPromise(1, 20),
       getPromise(1, 10),
       getPromise(1, 5),
     ]
 
     const expects = []
 
-    mulig.queue(promises, 
+    mulig.queue(promises,
       (value, index, isDone, prev = 0) => {
 
         expects.push(value)
-        if(isDone){
+        if (isDone) {
           check(done, () =>
             expect([1, 1, 1]).to.deep.equal(expects))
         }
 
         return value + prev
       },
-      () => {})
+      () => { })
   })
 
   it('value should be promise resolved value', (done) => {
     const promises = [
-      getPromise(1, 10), 
+      getPromise(1, 10),
       getPromise(4, 20),
       getPromise(7, 5),
     ]
@@ -209,54 +209,54 @@ describe('mulig: queue', () => {
     const orderExpect = [1, 4, 7]
 
     Promise.all(
-      mulig.queue(promises, 
+      mulig.queue(promises,
         (value) => {
           order.push(value)
         },
-        () => {}
+        () => { }
       )
     )
-    .then(() => 
-      check(done, () =>
-        expect(order).to.deep.equal(orderExpect)
-    ))
-    .catch(() => {})
+      .then(() =>
+        check(done, () =>
+          expect(order).to.deep.equal(orderExpect)
+        ))
+      .catch(() => { })
   })
 
   it('success fn should be able to pass value to next success fn', (done) => {
     const promises = [
-      getPromise(1, 20), 
+      getPromise(1, 20),
       getPromise(1, 10),
       getPromise(1, 5),
     ]
 
     const expects = 3
 
-    mulig.queue(promises, 
+    mulig.queue(promises,
       (value, index, isDone, prev = 0) => {
-        if(isDone){
+        if (isDone) {
           check(done, () =>
             expect(value + prev).to.equal(expects))
         }
 
         return value + prev
       },
-      () => {})
+      () => { })
   })
 
   it('error and success fn:s should be able to pass value to next success error/success fn', (done) => {
     const promises = [
-      getPromise(1, 20), 
+      getPromise(1, 20),
       getPromise(1, 10, true),
       getPromise(1, 5, true),
-      getPromise(1, 15),      
+      getPromise(1, 15),
     ]
 
     const expects = 4
 
-    mulig.queue(promises, 
+    mulig.queue(promises,
       (value, index, isDone, prev = 0) => {
-        if(isDone){
+        if (isDone) {
           check(done, () =>
             expect(value + prev).to.equal(expects))
         }
@@ -283,17 +283,17 @@ describe('mulig: stack', () => {
     const orderExpect = [3, 2, 1, 0]
 
     Promise.all(
-      mulig.stack(promises, 
+      mulig.stack(promises,
         (value, index) => {
           order.push(value)
         },
-        () => {}
+        () => { }
       )
     )
-    .then(() => 
-      check(done, () =>
-      expect(order).to.deep.equal(orderExpect)
-    ))
-    .catch(() => {})
+      .then(() =>
+        check(done, () =>
+          expect(order).to.deep.equal(orderExpect)
+        ))
+      .catch(() => { })
   })
 })
