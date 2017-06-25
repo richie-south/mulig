@@ -3,7 +3,7 @@
 
 [![npm version](https://badge.fury.io/js/mulig.svg)](https://badge.fury.io/js/mulig)    
 
-Resolves multible promises with order: fastest, queue and stack.
+Resolves multible promises with order (sequence): fastest, queue or stack.
 
 # Installation
 
@@ -38,19 +38,19 @@ const mulig = requre('mulig')
  * @return {Array}    [returns given array]
  */
 mulig(
-  [], /* array of Promises */
+  [],  /* array of Promises */
   (
     value,  /* any: value of resolved promise */
     index,  /* Number: index of resolved promise */
     isDone, /* Boolean: is last promise to resolve */
     prev    /* any: returned value from last time this or error function run */
-  ) => {}, /* success function */
+  ) => {},  /* success function */
   (
-    error, /* Error message */
+    error,  /* Error message */
     index, 
     isDone, 
     prev
-    ) => {} /* fail function: called on each error */
+    ) => {} /* fail function: called on each error (optional to ignore errors)*/
 )
 ```
 
@@ -83,7 +83,7 @@ mulig(
     console.log(`order of completion: &{value}`) 
     
     if(isDone){
-      console.log(`done: &{prev}`) // >>> 'done: 10'
+      console.log(`done: &{value + prev}`) // >>> 'done: 10'
     }
 
     return value + prev
@@ -99,7 +99,8 @@ mulig(
 
 `mulig.queue()`  
 
-mulig.queue resolves all promises in order of given array. Even if a promise at index 2 (in array) resolves before promise at index 0 it wont call the success or error callback before promise at index 0 and 1 resolves.
+mulig.queue resolves all promises in order (sequence) of given array.
+If a promise at index 2 (in array) resolves before promise at index 0 it wont call the success or error callback before promise at index 0 and 1 resolves.
 
 **simple example**
 ```javascript
@@ -120,13 +121,13 @@ mulig.queue(
     index,  /* Number: index of resolved promise */
     isDone, /* Boolean: is last promise to resolve */
     prev    /* any: returned value from last time this or error function run */
-  ) => {}, /* success function */
+  ) => {},  /* success function */
   (
-    error, /* Error message */
+    error,  /* Error message */
     index, 
     isDone, 
     prev
-    ) => {} /* fail function: called on each error */
+    ) => {} /* fail function: called on each error (optional to ignore errors)*/
 )
 ```
 
@@ -185,12 +186,12 @@ mulig.stack(
     index,  /* Number: index of resolved promise */
     isDone, /* Boolean: is last promise to resolve */
     prev    /* any: returned value from last time this or error function run */
-  ) => {}, /* success function */
+  ) => {},  /* success function */
   (
-    error, /* Error message */
+    error,  /* Error message */
     index, 
     isDone, 
     prev
-    ) => {} /* fail function: called on each error */
+    ) => {} /* fail function: called on each error (optional to ignore errors)*/
 )
 ```

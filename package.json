@@ -1,7 +1,7 @@
 {
   "name": "mulig",
   "version": "1.5.6",
-  "description": "Resolve multible promises with order: fastest, queue, stack",
+  "description": "Resolve multible promises with order (sequence): fastest, queue, stack",
   "main": "app.js",
   "scripts": {
     "test": "mocha test.js"
@@ -13,6 +13,7 @@
   "keywords": [
     "promise",
     "all",
+    "sequence",
     "first",
     "fastest",
     "queue",
